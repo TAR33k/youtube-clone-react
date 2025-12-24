@@ -43,6 +43,36 @@ nav {
 .nav-right .user-icon {
   width: 35px;
   border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 100;
+  min-width: 200px;
+}
+
+.dropdown-menu p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.dropdown-menu a {
+  display: block;
+  text-decoration: none;
+  color: #5a5a5a;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 @media (max-width: 900px) {

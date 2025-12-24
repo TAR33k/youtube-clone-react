@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./Feed.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_KEY, value_converter } from "../../data.js";
 import moment from "moment";
 
 const Feed = ({ category }) => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const videoList_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=BA&videoCategoryId=${category}&key=${API_KEY}`;
     await fetch(videoList_url)
       .then((response) => response.json())
-      .then((data) => setData(data.items));
+      .then((data) => setData(data.items))
+      .catch((error) => navigate("/error", { state: { error } }));
   };
 
   useEffect(() => {

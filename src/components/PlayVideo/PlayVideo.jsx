@@ -6,8 +6,10 @@ import share from "../../assets/share.png";
 import save from "../../assets/save.png";
 import { API_KEY, value_converter } from "../../data.js";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const PlayVideo = ({ videoId }) => {
+  const navigate = useNavigate();
   const [apiData, setApiData] = useState(null);
   const [channelData, setChannelData] = useState(null);
   const [commentData, setCommentData] = useState([]);
@@ -17,7 +19,14 @@ const PlayVideo = ({ videoId }) => {
     const videoDetails_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`;
     await fetch(videoDetails_url)
       .then((response) => response.json())
-      .then((data) => setApiData(data.items[0]));
+      .then((data) => {
+        if (data.items[0]) setApiData(data.items[0]);
+        else
+          navigate("/error", {
+            state: { error: { message: "Video data not available" } },
+          });
+      })
+      .catch((error) => navigate("/error", { state: { error } }));
   };
 
   const fetchOtherData = async () => {
@@ -27,13 +36,15 @@ const PlayVideo = ({ videoId }) => {
     const channelData_url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${apiData.snippet.channelId}&key=${API_KEY}`;
     await fetch(channelData_url)
       .then((response) => response.json())
-      .then((data) => setChannelData(data.items[0]));
+      .then((data) => setChannelData(data.items[0]))
+      .catch((error) => navigate("/error", { state: { error } }));
 
     // Comment data
     const commentData_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&order=relevance&maxResults=50&videoId=${videoId}&key=${API_KEY}`;
     await fetch(commentData_url)
       .then((response) => response.json())
-      .then((data) => setCommentData(data.items));
+      .then((data) => setCommentData(data.items))
+      .catch((error) => navigate("/error", { state: { error } }));
   };
 
   useEffect(() => {
@@ -82,7 +93,7 @@ const PlayVideo = ({ videoId }) => {
       <hr />
       <div className="publisher">
         <img
-          src={channelData ? channelData.snippet.thumbnails.default.url : ""}
+          src={channelData ? channelData.snippet.thumbnails.default.url : null}
           alt=""
         />
         <div>

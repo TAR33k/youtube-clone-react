@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./Recommended.css";
 import { API_KEY, value_converter } from "../../data";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const Recommended = ({ categoryId }) => {
   const { videoId } = useParams();
   const [apiData, setApiData] = useState([]);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const relatedVideo_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=45&regionCode=BA&videoCategoryId=${categoryId}&key=${API_KEY}`;
     await fetch(relatedVideo_url)
       .then((response) => response.json())
-      .then((data) => setApiData(data.items));
+      .then((data) => setApiData(data.items))
+      .catch((error) => navigate("/error", { state: { error } }));
   };
 
   useEffect(() => {

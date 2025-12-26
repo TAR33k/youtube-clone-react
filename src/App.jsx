@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
 import Video from "./pages/Video/Video";
 import Error from "./pages/Error/Error";
+import Search from "./pages/Search/Search";
 
 const App = () => {
   const [sidebar, setSidebar] = useState(true);
@@ -19,6 +20,7 @@ const App = () => {
       <Navbar setSidebar={setSidebar} user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Home sidebar={sidebar} />} />
+        <Route path="/search/:query" element={<Search sidebar={sidebar} />} />
         <Route path="/video/:categoryId/:videoId" element={<Video />} />
         <Route
           path="/profile"

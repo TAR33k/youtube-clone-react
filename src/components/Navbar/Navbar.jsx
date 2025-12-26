@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import profile_icon from "../../assets/tarik.jpg";
 import logo from "../../assets/logo.png";
 import menu_icon from "../../assets/menu.png";
@@ -11,6 +11,20 @@ import "./Navbar.css";
 
 const Navbar = ({ setSidebar, user }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  const searchHandler = () => {
+    if (query.trim().length > 0) {
+      navigate(`/search/${query}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchHandler();
+    }
+  };
 
   return (
     <nav className="flex-div">
@@ -27,8 +41,14 @@ const Navbar = ({ setSidebar, user }) => {
       </div>
       <div className="nav-middle flex-div">
         <div className="search-box flex-div">
-          <input type="text" placeholder="Search" />
-          <img src={search_icon} alt="" />
+          <input
+            type="text"
+            placeholder="Search"
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            value={query}
+          />
+          <img src={search_icon} alt="" onClick={searchHandler} />
         </div>
       </div>
       <div className="nav-right flex-div">
